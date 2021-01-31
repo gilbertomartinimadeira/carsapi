@@ -1,0 +1,38 @@
+var router = require('express').Router();
+var bodyParser = require('body-parser');
+
+var cars =  [];
+
+router.use(bodyParser.json());
+
+router.use((req,res,next) =>{
+	var message = 'requisicao recebida em '+ new Date();
+	console.log(message);
+	next();
+});
+
+router.get('/:name?', (req,res) => {
+	var name = req.params.name;
+	if(!name) {
+		res.send(cars);
+		return;
+	}
+
+	var query = req.query.name
+
+	var filteredCars = cars.filter(c => c.name === name.toLowerCase());
+	res.send(filteredCars);
+
+});
+
+router.post('/', (req, res) => { var postedCar = req.body; postedCar.name = 
+	postedCar.name.toLowerCase(); var carAlreadyExists = cars.some(c => c.name === 
+	postedCar.name); if(carAlreadyExists){
+		res.sendStatus(409);
+		return;
+	}
+	cars.push(postedCar);
+	res.sendStatus(201);
+});
+
+module.exports = router;
