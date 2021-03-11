@@ -5,12 +5,17 @@ var bodyParser = require('body-parser');
 var cars = [];
 
 router.use(bodyParser.json());
+
 router.use((req,res,next) =>{
-	var message = 'requisicao recebida em '+ new Date();
+	var message = 'requisição recebida em '+ new Date();
 	console.log(message);
 	next();
 });
 
+/* #swagger.responses[200] = { 
+                    description: 'User successfully obtained.',
+                    schema: { $ref: "#/definitions/User" } 
+} */
 router.get('/:id?', (req,res) => {
 	var idParam = req.params.id;
 	if(idParam){
@@ -45,19 +50,7 @@ router.post('/', (req, res) => {
 
 	postedCar.id = id;
 	cars.push(postedCar);
-	res.sendStatus(201);
-});
-
-router.put('/:id', (req, res) => {
-	
-});
-
-router.patch('/:id', (req, res) => {
-	
-});
-
-router.delete('/:id',(req,res) => {
-	
+	res.status(201).send(postedCar);
 });
 
 module.exports = router;
